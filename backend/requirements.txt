@@ -1,0 +1,23 @@
+# ==========================================
+# EAIOS Enterprise Dependencies (v1.1)
+# ==========================================
+
+# 1. API Framework & Server
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+pydantic>=2.10.0
+pydantic-settings>=2.3.4
+
+# 2. Agentic AI & Orchestration
+langchain==0.2.6
+langchain-openai==0.1.9
+langgraph==0.1.1
+pydantic-ai==0.0.14
+
+# 3. Memory & Vector DB Clients
+qdrant-client==1.9.1
+redis==5.0.7
+psycopg2-binary==2.9.9
+
+# 4. Utilities & Environment
+python-dotenv==1.0.1
