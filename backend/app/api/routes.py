@@ -1,21 +1,16 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
+from app.api.endpoints import auth
 
 router = APIRouter()
 
-class HealthCheckResponse(BaseModel):
-    status: str
-    system: str
-    version: str
+# Register the authentication endpoints to the main API router
+router.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 
-@router.get("/health", response_model=HealthCheckResponse, tags=["System"])
-async def health_check():
-    """
-    Kubernetes-ready liveness probe.
-    """
-    from app.core.config import settings
-    return HealthCheckResponse(
-        status="active",
-        system=settings.PROJECT_NAME,
-        version=settings.VERSION
-    )
+@router.get("/health")
+def health_check():
+    """Enterprise infrastructure validation endpoint."""
+    return {
+        "status": "active", 
+        "system": "EAIOS Orchestration Engine", 
+        "version": "1.0.0"
+    }

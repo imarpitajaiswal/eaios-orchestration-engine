@@ -15,9 +15,21 @@ langgraph==0.1.1
 pydantic-ai==0.0.14
 
 # 3. Memory & Vector DB Clients
-qdrant-client==1.9.1
 redis==5.0.7
 psycopg2-binary==2.9.9
+sqlalchemy==2.0.30
+qdrant-client==1.9.1
 
 # 4. Utilities & Environment
 python-dotenv==1.0.1
+
+# 5. Security & Authentication
+PyJWT==2.8.0
+bcrypt==3.2.2
+passlib==1.7.4
+
+# 6. Enterprise AI & Orchestration
+langchain==0.1.20
+langchain-openai==0.1.7
+langgraph==0.0.53
+openai==1.30.1

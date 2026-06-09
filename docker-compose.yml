@@ -1,0 +1,55 @@
+# ==========================================
+# EAIOS Infrastructure Manifesto
+# ==========================================
+
+services:
+  # 1. Relational State (LangGraph Checkpointer)
+  postgres:
+    image: postgres:15-alpine
+    container_name: eaios-postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminpassword
+      POSTGRES_DB: eaios_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d eaios_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. Asynchronous Broker & Cache
+  redis:
+    image: redis:7-alpine
+    container_name: eaios-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # 3. Vector Database (Semantic Memory & RAG)
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: eaios-qdrant
+    ports:
+      - "6333:6333" # REST API
+      - "6334:6334" # gRPC
+    volumes:
+      - qdrant_data:/qdrant/storage
+    restart: unless-stopped
+
+# Named volumes ensure data persists even if containers are destroyed
+volumes:
+  postgres_data:
+  redis_data:
+  qdrant_data:
