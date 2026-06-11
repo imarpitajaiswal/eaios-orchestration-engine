@@ -1,13 +1,25 @@
-from langchain_core.messages import AIMessage
-from langchain_core.runnables import RunnableLambda
+import os
+from dotenv import load_dotenv
+from langchain_groq import ChatGroq
 
-def mock_intelligence_core(messages) -> AIMessage:
-    """
-    A lightweight, decoupled tactical bypass.
-    Simulates the LLM response without triggering Pydantic validation walls.
-    """
-    return AIMessage(content="[MOCK AI]: The capital of France is Paris. (Note: Live OpenAI routing is currently bypassed for development).")
+# Ensure local environment variables are loaded
+load_dotenv()
 
-# We cast the standard Python function into a LangChain Runnable.
-# To the LangGraph state machine, this looks and acts exactly like a live ChatOpenAI model.
-llm_router = RunnableLambda(mock_intelligence_core)
+def get_base_llm(temperature: float = 0.0) -> ChatGroq:
+    """
+    Instantiates the Groq enterprise reasoning engine using Llama 3 70B.
+    Temperature is locked to 0.0 for highly deterministic, factual agent routing.
+    """
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        raise ValueError("CRITICAL: GROQ_API_KEY is missing from the environment.")
+
+    return ChatGroq(
+        model_name="llama-3.1-8b-instant",  # Upgraded to Meta's active 3.1 generation
+        temperature=temperature,
+        groq_api_key=api_key,
+        max_retries=3
+    )
+
+# Singleton instance for general orchestration tasks
+llm_router = get_base_llm()
